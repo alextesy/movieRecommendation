@@ -15,7 +15,6 @@ public class MainViewHandler {
     public ComboBox genreType;
     public TextField searchText;
     public VBox searchResultVBox;
-    private Main viewController;
 
     public void searchMovie(ActionEvent actionEvent) {
 
@@ -47,13 +46,11 @@ public class MainViewHandler {
         imageView.setFitHeight(100);
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
-//        imageView.setCache(true);
+        imageView.setCache(true);
         TextArea movieDescriptionTextArea = new TextArea();
         movieDescriptionTextArea.setText(movieDescription);
-        movieDescriptionTextArea.setMinWidth(100);
+        movieDescriptionTextArea.setMinWidth(300);
         movieDescriptionTextArea.setMaxHeight(100);
-
-
         ChoiceBox rankChoiceBox = new ChoiceBox(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
         rankChoiceBox.getSelectionModel().selectFirst();
         movieEntry.getChildren().add(imageView);
@@ -63,7 +60,7 @@ public class MainViewHandler {
         searchResultVBox.getChildren().add(movieEntry);
     }
 
-    public void setViewController(Main viewController) {
-        this.viewController = viewController;
+    public void clearMovies(){
+        searchResultVBox.getChildren().clear();
     }
 }
