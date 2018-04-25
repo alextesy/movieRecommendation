@@ -9,7 +9,9 @@ public class DB {
     public static void connect() {
         try {
             // db parameters
-            String url = "jdbc:sqlite:database.db";
+            Class.forName("org.sqlite.JDBC");
+
+            String url = "jdbc:sqlite:src\\database.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
 
@@ -17,14 +19,8 @@ public class DB {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
     public static List<User> getUsers(){
@@ -38,6 +34,8 @@ public class DB {
             while (resSet.next()) {
                 if(temp.getUserID().equals(resSet.getString("userID"))){
                     temp.addMovie(resSet.getString("movieId"),resSet.getDouble("rating"));
+
+
                 }
                 else{
                     Users.add(temp);
@@ -46,6 +44,9 @@ public class DB {
                 }
 
             }
+            Users.add(temp);
+
+
             return Users;
         } catch (SQLException e) {
             e.printStackTrace();
