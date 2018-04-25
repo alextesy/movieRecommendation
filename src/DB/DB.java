@@ -23,6 +23,39 @@ public class DB {
             e.printStackTrace();
         }
     }
+    public static User getUser(String id){
+        try {
+            Statement st = conn.createStatement();
+            ResultSet resSet = st.executeQuery("SELECT * FROM ratings WHERE userID=" +id+" ;");
+
+            User temp = new User(resSet.getString("userID"));
+            temp.addMovie(resSet.getString("movieId"),resSet.getDouble("rating"));
+            while (resSet.next()) {
+                temp.addMovie(resSet.getString("movieId"), resSet.getDouble("rating"));
+            }
+            return temp;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static List<String> getAllMovies() {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet resSet = st.executeQuery("SELECT movieId FROM movies ;");
+            List <String> movieList=new ArrayList<>();
+
+            while (resSet.next()) {
+                movieList.add(resSet.getString("movieId"));
+            }
+            return movieList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static List<User> getUsers(){
         try {
             Statement st = conn.createStatement();
