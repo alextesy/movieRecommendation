@@ -7,7 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MainViewHandler {
@@ -25,6 +27,13 @@ public class MainViewHandler {
     }
 
     public void setUp(){
+        try {
+            JSONObject jsonObject = JsonReader.readJsonFromUrl("https://api.themoviedb.org/3/movie/299536?api_key=6323cf8bd5ee99e29a95530e11aff7af&language=en-US");
+            Object backdrop_path = jsonObject.get("backdrop_path");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         String imageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/30oXQKwibh0uANGMs0Sytw3uN22.jpg";
         String movieDescription = "the best movie";
         addMovieEntry(imageUrl, movieDescription);
