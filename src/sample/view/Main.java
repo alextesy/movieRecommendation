@@ -12,11 +12,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader mainViewLoader = new FXMLLoader(getClass().getResource("view/MainView.fxml"));
+        FXMLLoader mainViewLoader = new FXMLLoader(getClass().getResource("MainView.fxml"));
         Parent root = mainViewLoader.load();
         MainViewHandler controller = mainViewLoader.getController();
-        controller.setViewController(this);
         controller.setUp();
+//        controller.clearMovies();
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 600, 475));
         primaryStage.show();
