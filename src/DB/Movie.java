@@ -11,6 +11,14 @@ public class Movie {
         this.tmdbID = tmdbID;
     }
 
+    public boolean equals(Movie m){
+        return this.ID.equals(m.getID());
+    }
+
+    public String getID(){
+        return ID;
+    }
+
     private String ID;
     private String title;
     private List<String> genre;

@@ -14,7 +14,7 @@ public class test {
         List<User> users=DB.getUsers();
         for (User u:users) {
             System.out.println(u.getUserID());
-            for(Map.Entry<String,Double> e:u.getRatings().entrySet()){
+            for(Map.Entry<Movie, Double> e:u.getRatings().entrySet()){
                 System.out.println(e.getKey()+" "+e.getValue());
             }
         }
