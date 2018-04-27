@@ -21,7 +21,7 @@ public class PearsonCorrelationTest {
         User userC = new User("Yossi");
         Movie a = new Movie(" Homot Shel Tikva", " Homot Shel Tikva", genre, "Homot Shel Tikva", "Homot Shel Tikva");
         Movie b = new Movie("Hasandak", "Hasandak", genre, "Hasandak", "Hasandak");
-        Movie c = new Movie(" The Godfather", " The Godfather", genre, " The Godfather", " The Godfather");
+        Movie c = new Movie("The Godfather", "The Godfather", genre, "The Godfather", "The Godfather");
         Movie d = new Movie("The Dark Knight", "The Dark Knight", genre, "The Dark Knight", "The Dark Knight");
         Movie e = new Movie("12 Angry Men", "12 Angry Men", genre, "12 Angry Men", "12 Angry Men");
         userA.addRating(a,8);
