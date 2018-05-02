@@ -82,6 +82,9 @@ public class DataReader {
         }
     }
 
+
+
+
     public Map<Integer, Map<Integer, Double>> getRates() {
         return rates;
     }
