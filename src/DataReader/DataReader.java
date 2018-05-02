@@ -15,8 +15,8 @@ public class DataReader {
     private final String ratesPath = "ratings.csv";
     private final String moviePath = "movies.csv";
     private Map<Integer, Map<Integer, Double>> rates;
-    private Map<Integer, Movie> movies;
-    private Map<Integer, Integer> links;
+    public static Map<Integer, Movie> movies;// i changed to static and public kill me
+    public Map<Integer, Integer> links;// changed to public
 
     public DataReader(String dataPath) {
         loadRates(dataPath);

@@ -27,7 +27,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#searchMovie" prefHeight="25.0" prefWidth="86.0" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Button fx:id="searchBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                 <ComboBox fx:id="genreType" prefWidth="150.0" promptText="Genres" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <TextField fx:id="searchText" promptText="search by name" GridPane.rowIndex="2" />
                 <Label prefHeight="43.0" prefWidth="484.0" text="The greatest movie search engine ! " textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
@@ -42,11 +42,27 @@
         </GridPane>
     </top>
     <center>
-        <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-image: url('https://st3.depositphotos.com/8456068/16967/i/1600/depositphotos_169673064-stock-photo-popcorn-horizontal-banner-red-stripped.jpg');" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scroll" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(0, 0, 0, 0);" BorderPane.alignment="CENTER">
             <content>
-                <VBox fx:id="searchResultVBox" prefHeight="241.0" prefWidth="198.0">
+                <VBox fx:id="searchResultVBox" alignment="CENTER" prefHeight="241.0" prefWidth="198.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
                 </VBox>
             </content>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
         </ScrollPane>
     </center>
+   <bottom>
+      <Button mnemonicParsing="false" onAction="#showRecommndation" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: #339933;" text="Generate Recommedations" textAlignment="CENTER" textFill="#fafcf3" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+         <opaqueInsets>
+            <Insets bottom="5.0" top="10.0" />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </BorderPane.margin>
+      </Button>
+   </bottom>
 </BorderPane>

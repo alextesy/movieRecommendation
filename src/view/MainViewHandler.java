@@ -4,6 +4,7 @@ import DataReader.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -21,22 +22,42 @@ import java.io.IOException;
 import java.util.*;
 
 public class MainViewHandler {
-    public Button searchBtn;
-    public ComboBox genreType;
-    public TextField searchText;
+   // public Button searchBtn;
+    //public ComboBox genreType;
+    //public TextField searchText;
     public VBox searchResultVBox;
-
+    @FXML
+    private Button searchBtn;
+    @FXML
+    private TextField searchText;
     private Map<Integer, Double> userRates;
 
-    public void searchMovie(ActionEvent actionEvent) {
+    public void searchMovie( ) {
+        String userInput= searchText.getText().toString();
+        System.out.println(userInput);
+        String id="";
+        //need to add te list of movie titles
+        if(DataReader.movies.containsKey(userInput))
+        {
+            //id= DataReader.movie
+            showMovieWindow(userInput);
+        }
+        else
+        {
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Movie not found \n please change your search input to a valid movie title");
+        }
 
     }
 
-    public void showSearchResults(List<Movie> movies){
+    public void showSearchResults(String input,List<Movie> movies){
 
     }
 
     public void setUp(){
+
+        searchBtn.setOnAction(e->searchMovie());
+
         userRates = new HashMap<>();
         DataReader dataReader = new DataReader("resources/");
         Map<Integer, Movie> movies = dataReader.getMovies();
@@ -47,17 +68,20 @@ public class MainViewHandler {
             Integer randomKey = movieIds.get(random.nextInt(movieIds.size()) );
             Movie movie = movies.get(randomKey.intValue());
             int movieId = randomKey.intValue();
-            int tdbmId = links.get(movieId);
             String imagePath = "30oXQKwibh0uANGMs0Sytw3uN22.jpg";
             try {
+                int tdbmId = links.get(movieId);
                 JSONObject jsonObject = JsonReader.readJsonFromUrl("https://api.themoviedb.org/3/movie/" + tdbmId + "?api_key=6323cf8bd5ee99e29a95530e11aff7af&language=en-US");
-                imagePath = (String) jsonObject.get("backdrop_path");
 
-            } catch (IOException e) {
-                imagePath = "30oXQKwibh0uANGMs0Sytw3uN22.jpg";//add diffrent photo
-            }
+                    imagePath = (String) jsonObject.get("backdrop_path");
+                }
+                catch(Exception e){
+                    imagePath= "https://png.pngtree.com/element_origin_min_pic/16/09/08/2057d15a050b0d1.jpg";
+                    addMovieEntry(imagePath, movie.getTitle(), movieId);
+                    continue;
+                }
             String imageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + imagePath;
-            String movieDescription = "the best movie";
+           // String movieDescription = "the best movie";
             addMovieEntry(imageUrl, movie.getTitle(), movieId);
         }
     }
@@ -116,6 +140,14 @@ public class MainViewHandler {
             Alert alert=new Alert(Alert.AlertType.ERROR);
             alert.setContentText("new window dont open");
         }
+    }
+    public void showRecommndation(){
+//        FXMLLoader movieViewLoader = new FXMLLoader(getClass().getResource("results.fxml"));
+//        //Parent root = movieViewLoader.load();
+//        Stage stage = new Stage();
+//        stage.setTitle("add title like the movie name");
+//        stage.setScene(new Scene(root));
+//        stage.show();
     }
 
 }
