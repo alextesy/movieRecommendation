@@ -12,14 +12,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataReader {
-    private final String ratesPath = "ratings.csv";
+    private final String ratesPath = "ratings_for_tests.csv";
     private final String moviePath = "movies.csv";
     private Map<Integer, Map<Integer, Double>> rates;
     private Map<Integer, Movie> movies;
+    private Map<Integer, Integer> links;
 
     public DataReader(String dataPath) {
         loadRates(dataPath);
         loadMovies(dataPath);
+
+        links = new HashMap<>();
+        try {
+            BufferedReader reader = Files.newBufferedReader(Paths.get(dataPath + "links.csv"));
+            CSVParser parser = CSVParser.parse(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase()
+                    .withTrim());
+            for (CSVRecord csvRecord : parser) {
+                int movieId = Integer.parseInt(csvRecord.get("movieId"));
+                int tmbdId = Integer.parseInt(csvRecord.get("tmdbId"));
+                links.put(movieId, tmbdId);
+            }
+        } catch (Exception e) {
+        }
     }
 
     private void loadMovies(String dataPath) {
@@ -65,5 +79,9 @@ public class DataReader {
 
     public Map<Integer, Movie> getMovies() {
         return movies;
+    }
+
+    public Map<Integer, Integer> getLinks() {
+        return links;
     }
 }

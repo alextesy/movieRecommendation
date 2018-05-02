@@ -14,7 +14,7 @@ public class DataReaderTest {
 
     @Before
     public void setUp() throws Exception {
-        dataReader = new DataReader("resources/");
+        dataReader = new DataReader("ml-latest/");
     }
 
     @Test
@@ -33,5 +33,11 @@ public class DataReaderTest {
         assertEquals(movies.get(41).getTitle(), "Richard III (1995)");
         String[] genres = {"Action", "Crime", "Thriller"};
         assertArrayEquals(movies.get(6).getGenres(), genres);
+    }
+
+    @Test
+    public void readLinks(){
+        Map<Integer, Integer> links = dataReader.getLinks();
+        assertEquals(links.get(10).intValue(), 710);
     }
 }
