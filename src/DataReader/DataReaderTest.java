@@ -14,7 +14,7 @@ public class DataReaderTest {
 
     @Before
     public void setUp() throws Exception {
-        dataReader = new DataReader("ml-latest/");
+        dataReader = new DataReader("resources/");
     }
 
     @Test

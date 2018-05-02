@@ -1,12 +1,10 @@
-package sample.view;
+package view;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sample.view.MainViewHandler;
 
 public class Main extends Application {
 

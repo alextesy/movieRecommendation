@@ -1,4 +1,4 @@
-package sample.view;
+package view;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataReader {
-    private final String ratesPath = "ratings_for_tests.csv";
+    private final String ratesPath = "ratings.csv";
     private final String moviePath = "movies.csv";
     private Map<Integer, Map<Integer, Double>> rates;
     private Map<Integer, Movie> movies;
@@ -23,16 +23,25 @@ public class DataReader {
         loadMovies(dataPath);
 
         links = new HashMap<>();
+        CSVParser parser;
+
         try {
             BufferedReader reader = Files.newBufferedReader(Paths.get(dataPath + "links.csv"));
-            CSVParser parser = CSVParser.parse(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase()
+            parser = CSVParser.parse(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase()
                     .withTrim());
             for (CSVRecord csvRecord : parser) {
                 int movieId = Integer.parseInt(csvRecord.get("movieId"));
-                int tmbdId = Integer.parseInt(csvRecord.get("tmdbId"));
-                links.put(movieId, tmbdId);
+                try {
+
+                    int tmbdId = Integer.parseInt(csvRecord.get("tmdbId").trim());
+                    links.put(movieId, tmbdId);
+                }
+                catch (Exception e){
+
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
