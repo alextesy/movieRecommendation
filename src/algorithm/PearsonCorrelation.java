@@ -1,8 +1,6 @@
 package algorithm;
 
 
-import DB.Movie;
-import DB.User;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 import java.util.*;

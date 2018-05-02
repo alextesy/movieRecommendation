@@ -1,6 +1,5 @@
 package view;
 
-import DB.User;
 import DataReader.*;
 import algorithm.PearsonCorrelation;
 import javafx.collections.FXCollections;
@@ -29,44 +28,58 @@ public class MainViewHandler {
     //public TextField searchText;
     public VBox searchResultVBox;
     @FXML
+    private Button rndBtn;
+    @FXML
+    private Button genrBtn;
+    @FXML
     private Button searchBtn;
     @FXML
     private TextField searchText;
+
     private Map<Integer, Double> userRates;
     private DataReader dataReader;
 
 
     public void searchMovie() {
         String userInput = searchText.getText().toString();
+        if (userInput=="")
+            return;
         System.out.println(userInput);
-        String id = "";
+        boolean flag=false;
         //need to add te list of movie titles
-        if (DataReader.movies.containsKey(userInput)) {
-            //id= DataReader.movie
-            showMovieWindow(userInput);
-        } else {
+        for (Map.Entry<Integer,Movie> m:dataReader.getMovies().entrySet()) {
+            if (m.getValue().getTitle().toLowerCase().contains(userInput.toLowerCase())) {
+                clearMovies();
+                String url = getMoviePictureUrl(m.getValue(), m.getKey());
+                addMovieEntry(url, m.getValue().getTitle(), m.getKey());
+                flag=true;
+                break;
+            }
+        }
+        if (!flag) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Movie not found \n please change your search input to a valid movie title");
+            alert.show();
         }
-
-    }
-
-    public void showSearchResults(String input, List<Movie> movies) {
 
     }
 
     public void setUp() {
 
         searchBtn.setOnAction(e -> searchMovie());
-
         userRates = new HashMap<>();
         dataReader = new DataReader("resources/");
         generateRandomMovies(10);
     }
+    public void btnGenerateRandom(){
+
+        generateRandomMovies(10);
+    }
 
     private void generateRandomMovies(int movieLimit) {
+
         Map<Integer, Movie> movies = dataReader.getMovies();
-        Map<Integer, Integer> links = dataReader.getLinks();
+
         Random random = new Random();
         List<Integer> movieIds = new ArrayList<Integer>(movies.keySet());
         for (int i = 0; i < movieLimit; i++) {
@@ -74,20 +87,29 @@ public class MainViewHandler {
             Movie movie = movies.get(randomKey.intValue());
             int movieId = randomKey.intValue();
             String imagePath = "30oXQKwibh0uANGMs0Sytw3uN22.jpg";
-            try {
-                int tdbmId = links.get(movieId);
-                JSONObject jsonObject = JsonReader.readJsonFromUrl("https://api.themoviedb.org/3/movie/" + tdbmId + "?api_key=6323cf8bd5ee99e29a95530e11aff7af&language=en-US");
-
-                imagePath = (String) jsonObject.get("backdrop_path");
-            } catch (Exception e) {
-                imagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/08/2057d15a050b0d1.jpg";
-                addMovieEntry(imagePath, movie.getTitle(), movieId);
-                continue;
-            }
-            String imageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + imagePath;
+            String imageUrl = getMoviePictureUrl(movie, movieId);
+            if (imageUrl == null) continue;
             // String movieDescription = "the best movie";
             addMovieEntry(imageUrl, movie.getTitle(), movieId);
         }
+
+    }
+
+    private String getMoviePictureUrl(Movie movie, int movieId) {
+        Map<Integer, Integer> links = dataReader.getLinks();
+        String imagePath;
+        try {
+            int tdbmId = links.get(movieId);
+            JSONObject jsonObject = JsonReader.readJsonFromUrl("https://api.themoviedb.org/3/movie/" + tdbmId + "?api_key=6323cf8bd5ee99e29a95530e11aff7af&language=en-US");
+
+            imagePath = (String) jsonObject.get("backdrop_path");
+        } catch (Exception e) {
+            imagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/08/2057d15a050b0d1.jpg";
+            addMovieEntry(imagePath, movie.getTitle(), movieId);
+            return null;
+        }
+        String imageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + imagePath;
+        return imageUrl;
     }
 
     private void addMovieEntry(String imageUrl, String movieDescription, int movieId) {
@@ -122,8 +144,6 @@ public class MainViewHandler {
         movieEntry.getChildren().add(movieDescriptionTextArea);
         movieEntry.getChildren().add(rankChoiceBox);
         movieEntry.getChildren().add(submitRate);
-
-
         searchResultVBox.getChildren().add(movieEntry);
     }
 
@@ -131,21 +151,8 @@ public class MainViewHandler {
         searchResultVBox.getChildren().clear();
     }
 
-    public void showMovieWindow(String name) {
-        try {
-            FXMLLoader movieViewLoader = new FXMLLoader(getClass().getResource("moviePage.fxml"));
-            Parent root = movieViewLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle("add title like the movie name");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("new window dont open");
-        }
-    }
-
     public void showRecommndation() {
+
         if(userRates.size()<10)
         {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -153,6 +160,9 @@ public class MainViewHandler {
             alert.show();
             return;
         }
+
+//        rndBtn.setDisable(true);
+//        genrBtn.setDisable(true);
         PearsonCorrelation PC = new PearsonCorrelation();
         List<Integer> topMovies = PC.getTopMovies(dataReader.getRates(), userRates);
         Parent root;
@@ -164,19 +174,24 @@ public class MainViewHandler {
             controller.showMovies(topMovies);
             Stage stage = new Stage();
             stage.setTitle("My New Stage Title");
-            stage.setScene(new Scene(root, 450, 450));
+            stage.setScene(new Scene(root, 600, 450));
             stage.show();
-
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
+//        rndBtn.setDisable(false);
+//        genrBtn.setDisable(false);
     }
 
     public void showRandomMovies(ActionEvent actionEvent) {
+
+       // rndBtn.setDisable(true);
+        //genrBtn.setDisable(true);
         clearMovies();
         generateRandomMovies(10);
+//        rndBtn.setDisable(false);
+//        genrBtn.setDisable(false);
     }
 }
 

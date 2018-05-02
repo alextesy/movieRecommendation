@@ -64,7 +64,7 @@ public class RecommendationsHandler implements Initializable{
         imageView.setCache(true);
         TextArea movieDescriptionTextArea = new TextArea();
         movieDescriptionTextArea.setText(movieDescription);
-        movieDescriptionTextArea.setMinWidth(500);
+        movieDescriptionTextArea.setMinWidth(300);
         movieDescriptionTextArea.setMaxHeight(100);
         movieDescriptionTextArea.setEditable(false);
 

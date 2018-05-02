@@ -15,7 +15,7 @@ public class Main extends Application {
         MainViewHandler controller = mainViewLoader.getController();
         controller.setUp();
 //        controller.clearMovies();
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Find your movie");
         primaryStage.setScene(new Scene(root, 600, 475));
         primaryStage.show();
     }
