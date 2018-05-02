@@ -71,15 +71,12 @@ public class MainViewHandler {
         dataReader = new DataReader("resources/");
         generateRandomMovies(10);
     }
-    public void btnGenerateRandom(){
 
-        generateRandomMovies(10);
-    }
 
     private void generateRandomMovies(int movieLimit) {
 
         Map<Integer, Movie> movies = dataReader.getMovies();
-
+        List<MovieEntry> entries=new ArrayList<>();
         Random random = new Random();
         List<Integer> movieIds = new ArrayList<Integer>(movies.keySet());
         for (int i = 0; i < movieLimit; i++) {
@@ -90,7 +87,11 @@ public class MainViewHandler {
             String imageUrl = getMoviePictureUrl(movie, movieId);
             if (imageUrl == null) continue;
             // String movieDescription = "the best movie";
-            addMovieEntry(imageUrl, movie.getTitle(), movieId);
+            entries.add(new MovieEntry(imageUrl,movie.getTitle(),movieId));
+            //addMovieEntry(imageUrl, movie.getTitle(), movieId);
+        }
+        for (MovieEntry m:entries) {
+            addMovieEntry(m.imageUrl,m.title,m.ID);
         }
 
     }
@@ -186,12 +187,13 @@ public class MainViewHandler {
 
     public void showRandomMovies(ActionEvent actionEvent) {
 
-       // rndBtn.setDisable(true);
-        //genrBtn.setDisable(true);
-        clearMovies();
-        generateRandomMovies(10);
-//        rndBtn.setDisable(false);
-//        genrBtn.setDisable(false);
+     //   rndBtn.setDisable(true);
+       // genrBtn.setDisable(true);
+            clearMovies();
+            generateRandomMovies(10);
+
+       // rndBtn.setDisable(false);
+        //genrBtn.setDisable(false);
     }
 }
 

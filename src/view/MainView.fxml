@@ -59,7 +59,7 @@
     </center>
    <bottom>
        <HBox prefHeight="49.0" prefWidth="570.0" BorderPane.alignment="CENTER">
-           <Button fx:id="rndBtn" mnemonicParsing="false" onAction="#btnGenerateRandom" prefHeight="39.0" prefWidth="197.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: #339933;" text="Show random movies" textAlignment="CENTER" textFill="#fafcf3" BorderPane.alignment="CENTER">
+           <Button fx:id="rndBtn" mnemonicParsing="false" onAction="#showRandomMovies" prefHeight="39.0" prefWidth="197.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: #339933;" text="Show random movies" textAlignment="CENTER" textFill="#fafcf3" BorderPane.alignment="CENTER">
                <font>
                    <Font name="System Bold" size="16.0" />
                </font>
