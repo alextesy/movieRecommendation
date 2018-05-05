@@ -2,6 +2,7 @@ package view;
 
 import DataReader.*;
 import algorithm.PearsonCorrelation;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,10 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.*;
 
-public class MainViewHandler {
-    // public Button searchBtn;
-    //public ComboBox genreType;
-    //public TextField searchText;
+public class MainViewHandler extends Observable implements Observer {
     public VBox searchResultVBox;
     @FXML
     private Button rndBtn;
@@ -42,17 +40,20 @@ public class MainViewHandler {
 
     public void searchMovie() {
         String userInput = searchText.getText().toString();
-        if (userInput=="")
+        if (userInput.equals(""))
             return;
         System.out.println(userInput);
-        boolean flag=false;
+        boolean flag = false;
         //need to add te list of movie titles
-        for (Map.Entry<Integer,Movie> m:dataReader.getMovies().entrySet()) {
+        for (Map.Entry<Integer, Movie> m : dataReader.getMovies().entrySet()) {
             if (m.getValue().getTitle().toLowerCase().contains(userInput.toLowerCase())) {
                 clearMovies();
                 String url = getMoviePictureUrl(m.getValue(), m.getKey());
-                addMovieEntry(url, m.getValue().getTitle(), m.getKey());
-                flag=true;
+                HBox movieEntry = addMovieEntry(url, m.getValue().getTitle(), m.getKey());
+                Platform.runLater(() -> {
+                    searchResultVBox.getChildren().add(movieEntry);
+                });
+                flag = true;
                 break;
             }
         }
@@ -65,18 +66,19 @@ public class MainViewHandler {
     }
 
     public void setUp() {
-
+        this.addObserver(this);
         searchBtn.setOnAction(e -> searchMovie());
         userRates = new HashMap<>();
         dataReader = new DataReader("resources/");
         generateRandomMovies(10);
+//        showMovies(entries);
     }
 
 
     private void generateRandomMovies(int movieLimit) {
-
+        System.out.println("Generate Random Movies");
         Map<Integer, Movie> movies = dataReader.getMovies();
-        List<MovieEntry> entries=new ArrayList<>();
+        List<MovieEntry> entries = new ArrayList<>();
         Random random = new Random();
         List<Integer> movieIds = new ArrayList<Integer>(movies.keySet());
         for (int i = 0; i < movieLimit; i++) {
@@ -86,13 +88,21 @@ public class MainViewHandler {
             String imagePath = "30oXQKwibh0uANGMs0Sytw3uN22.jpg";
             String imageUrl = getMoviePictureUrl(movie, movieId);
             if (imageUrl == null) continue;
-            // String movieDescription = "the best movie";
-            entries.add(new MovieEntry(imageUrl,movie.getTitle(),movieId));
-            //addMovieEntry(imageUrl, movie.getTitle(), movieId);
+            entries.add(new MovieEntry(imageUrl, movie.getTitle(), movieId));
         }
-        for (MovieEntry m:entries) {
-            addMovieEntry(m.imageUrl,m.title,m.ID);
+        setChanged();
+        notifyObservers(entries);
+    }
+
+    private void showMovies(List<MovieEntry> entries) {
+        List<HBox> movieViews = new ArrayList<>();
+        for (MovieEntry m : entries) {
+            HBox movieEntry = addMovieEntry(m.imageUrl, m.title, m.ID);
+            movieViews.add(movieEntry);
         }
+        Platform.runLater(() -> {
+            searchResultVBox.getChildren().addAll(movieViews);
+        });
 
     }
 
@@ -106,17 +116,20 @@ public class MainViewHandler {
             imagePath = (String) jsonObject.get("backdrop_path");
         } catch (Exception e) {
             imagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/08/2057d15a050b0d1.jpg";
-            addMovieEntry(imagePath, movie.getTitle(), movieId);
+            HBox movieEntry = addMovieEntry(imagePath, movie.getTitle(), movieId);
+            Platform.runLater(() -> {
+                searchResultVBox.getChildren().add(movieEntry);
+            });
             return null;
         }
         String imageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + imagePath;
         return imageUrl;
     }
 
-    private void addMovieEntry(String imageUrl, String movieDescription, int movieId) {
-        HBox movieEntry = new HBox();
+    private HBox addMovieEntry(String imageUrl, String movieDescription, int movieId) {
+        HBox movieEntryHbox = new HBox();
 
-        movieEntry.setPadding(new Insets(15, 0, 15, 0));
+        movieEntryHbox.setPadding(new Insets(15, 0, 15, 0));
         Image image = new Image(imageUrl);
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(100);
@@ -136,64 +149,94 @@ public class MainViewHandler {
             @Override
             public void handle(ActionEvent e) {
                 Double selectedItem = Double.parseDouble(rankChoiceBox.getSelectionModel().getSelectedItem().toString());
-                userRates.put(movieId, selectedItem);
+                Platform.runLater(() -> {
+                    userRates.put(movieId, selectedItem);
+                });
                 System.out.println("rate enterd " + movieId + " rate: " + selectedItem);
             }
         });
 
-        movieEntry.getChildren().add(imageView);
-        movieEntry.getChildren().add(movieDescriptionTextArea);
-        movieEntry.getChildren().add(rankChoiceBox);
-        movieEntry.getChildren().add(submitRate);
-        searchResultVBox.getChildren().add(movieEntry);
+        movieEntryHbox.getChildren().add(imageView);
+        movieEntryHbox.getChildren().add(movieDescriptionTextArea);
+        movieEntryHbox.getChildren().add(rankChoiceBox);
+        movieEntryHbox.getChildren().add(submitRate);
+        return movieEntryHbox;
     }
 
     public void clearMovies() {
-        searchResultVBox.getChildren().clear();
+        Platform.runLater(() -> {
+            searchResultVBox.getChildren().clear();
+        });
+
     }
 
     public void showRecommndation() {
 
-        if(userRates.size()<10)
-        {
+        if (userRates.size() < 10) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("You have to Rate at least 10 movies");
             alert.show();
             return;
         }
+        Thread t = new Thread(() -> {
+            PearsonCorrelation PC = new PearsonCorrelation();
+            List<Integer> topMovies = PC.getTopMovies(dataReader.getRates(), userRates);
+            Parent root;
+            try {
+                FXMLLoader RecommandetionsLoader = new FXMLLoader(getClass().getResource("Recommendations.fxml"));
+                root = RecommandetionsLoader.load();
+                RecommendationsHandler controller = RecommandetionsLoader.getController();
+                controller.setDataReader(dataReader);
+                controller.showMovies(topMovies);
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    stage.setTitle("My New Stage Title");
+                    stage.setScene(new Scene(root, 600, 450));
+                    stage.show();
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            setChanged();
+            notifyObservers("endCalc");
+        });
+        rndBtn.setDisable(true);
+        genrBtn.setDisable(true);
+        searchBtn.setDisable(true);
+        t.start();
 
-//        rndBtn.setDisable(true);
-//        genrBtn.setDisable(true);
-        PearsonCorrelation PC = new PearsonCorrelation();
-        List<Integer> topMovies = PC.getTopMovies(dataReader.getRates(), userRates);
-        Parent root;
-        try {
-            FXMLLoader RecommandetionsLoader = new FXMLLoader(getClass().getResource("Recommendations.fxml"));
-            root = RecommandetionsLoader.load();
-            RecommendationsHandler controller = RecommandetionsLoader.getController();
-            controller.setDataReader(dataReader);
-            controller.showMovies(topMovies);
-            Stage stage = new Stage();
-            stage.setTitle("My New Stage Title");
-            stage.setScene(new Scene(root, 600, 450));
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+
 //        rndBtn.setDisable(false);
 //        genrBtn.setDisable(false);
     }
 
     public void showRandomMovies(ActionEvent actionEvent) {
 
-     //   rndBtn.setDisable(true);
-       // genrBtn.setDisable(true);
-            clearMovies();
+        rndBtn.setDisable(true);
+        genrBtn.setDisable(true);
+        searchBtn.setDisable(true);
+        Thread t = new Thread(() -> {
             generateRandomMovies(10);
+        });
+        t.start();
+//        showMovies(entries);
 
-       // rndBtn.setDisable(false);
-        //genrBtn.setDisable(false);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg.equals("endCalc")) {
+            rndBtn.setDisable(false);
+            genrBtn.setDisable(false);
+            searchBtn.setDisable(false);
+            return;
+        }
+        List<MovieEntry> entries = (List<MovieEntry>) arg;
+        clearMovies();
+        showMovies(entries);
+        rndBtn.setDisable(false);
+        genrBtn.setDisable(false);
+        searchBtn.setDisable(false);
     }
 }
 
