@@ -44,7 +44,6 @@ public class MainViewHandler extends Observable implements Observer {
             return;
         System.out.println(userInput);
         boolean flag = false;
-        //need to add te list of movie titles
         for (Map.Entry<Integer, Movie> m : dataReader.getMovies().entrySet()) {
             if (m.getValue().getTitle().toLowerCase().contains(userInput.toLowerCase())) {
                 clearMovies();
@@ -71,7 +70,6 @@ public class MainViewHandler extends Observable implements Observer {
         userRates = new HashMap<>();
         dataReader = new DataReader("resources/");
         generateRandomMovies(10);
-//        showMovies(entries);
     }
 
 
@@ -204,10 +202,6 @@ public class MainViewHandler extends Observable implements Observer {
         genrBtn.setDisable(true);
         searchBtn.setDisable(true);
         t.start();
-
-
-//        rndBtn.setDisable(false);
-//        genrBtn.setDisable(false);
     }
 
     public void showRandomMovies(ActionEvent actionEvent) {
@@ -219,7 +213,6 @@ public class MainViewHandler extends Observable implements Observer {
             generateRandomMovies(10);
         });
         t.start();
-//        showMovies(entries);
 
     }
 
