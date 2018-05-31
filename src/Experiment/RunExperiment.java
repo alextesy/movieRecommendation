@@ -11,8 +11,8 @@ public class RunExperiment {
     public static void main(String[] args) {
         List<Double> ourAlgAccuracy = new ArrayList<>();
         List<Double> otherAlgAccuracy = new ArrayList<>();
-        List<Double> ourAlgRMSE = new ArrayList<>();
-        List<Double> otherAlgRMSE = new ArrayList<>();
+//        List<Double> ourAlgRMSE = new ArrayList<>();
+//        List<Double> otherAlgRMSE = new ArrayList<>();
         RecommendationMethod pc = new PearsonCorrelation();
         RecommendationMethod randomRecommender = new RandomRecommender();
         DataReader dataReader = new DataReader("resources/");
@@ -39,28 +39,23 @@ public class RunExperiment {
             List<Map.Entry<Integer, Double>> topMovies = pc.getTopMovies(totalRatesForTests, userRatesForTrain);
             Double acc = getAccuracy(userRatesForTest, topMovies);
             ourAlgAccuracy.add(acc);
-//            System.out.println("Our Algorithm accuracy: " + acc);
             double rmse = getRmse(userRatesForTest, topMovies);
-            ourAlgRMSE.add(rmse);
-//            System.out.println("Our Algorithm rmse: " + rmse);
-
+//            ourAlgRMSE.add(rmse);
 
             topMovies = randomRecommender.getTopMovies(totalRatesForTests, userRatesForTrain);
             Double acc2 = getAccuracy(userRatesForTest, topMovies);
             otherAlgAccuracy.add(acc2);
-//            System.out.println("Other Algorithm accuracy: " + acc2);
             double rmse2 = getRmse(userRatesForTest, topMovies);
-            otherAlgRMSE.add(rmse2);
-//            System.out.println("Our Algorithm rmse: " + rmse2);
+//            otherAlgRMSE.add(rmse2);
         }
         double ourAccAvg = calcAvg(ourAlgAccuracy);
-        double ourRmseAvg = calcAvg(ourAlgRMSE);
+//        double ourRmseAvg = calcAvg(ourAlgRMSE);
         double otherAccAvg = calcAvg(otherAlgAccuracy);
-        double otherRmseAvg = calcAvg(otherAlgRMSE);
+//        double otherRmseAvg = calcAvg(otherAlgRMSE);
         System.out.println("Our Algorithm accuracy: " + ourAccAvg);
-        System.out.println("Our Algorithm rmse: " + ourRmseAvg);
+//        System.out.println("Our Algorithm rmse: " + ourRmseAvg);
         System.out.println("Other Algorithm accuracy: " + otherAccAvg);
-        System.out.println("Other Algorithm rmse: " + otherRmseAvg);
+//        System.out.println("Other Algorithm rmse: " + otherRmseAvg);
     }
 
     private static double calcAvg(List<Double> ourAlgAccuracy) {
@@ -69,12 +64,16 @@ public class RunExperiment {
 
     private static double getRmse(Map<Integer, Double> userRatesForTest, List<Map.Entry<Integer, Double>> topMovies) {
         double sum = 0;
+        int count = 0;
         for (Map.Entry<Integer, Double> movie : topMovies) {
             if (userRatesForTest.containsKey(movie.getKey())) {
                 sum += Math.pow(movie.getValue() - userRatesForTest.get(movie.getKey()).doubleValue(), 2);
+                count ++;
             }
         }
-        return Math.sqrt(sum / topMovies.size());
+        if(count == 0)
+            return 0;
+        return Math.sqrt(sum / count);
     }
 
     private static Double getAccuracy(Map<Integer, Double> userRatesForTest, List<Map.Entry<Integer, Double>> topMovies) {

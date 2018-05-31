@@ -7,12 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Experiment/RunExperiment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/algorithm/RandomRecommender.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/algorithm/RecommendationMethod.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/algorithm/PearsonCorrelation.java" afterPath="$PROJECT_DIR$/src/algorithm/PearsonCorrelation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/view/MainViewHandler.java" afterPath="$PROJECT_DIR$/src/view/MainViewHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Experiment/RunExperiment.java" afterPath="$PROJECT_DIR$/src/Experiment/RunExperiment.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -96,8 +92,8 @@
       <file leaf-file-name="RunExperiment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Experiment/RunExperiment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="61" column="71" lean-forward="true" selection-start-line="61" selection-start-column="71" selection-end-line="61" selection-end-column="71" />
+            <state relative-caret-position="173">
+              <caret line="49" column="9" lean-forward="true" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -993,7 +989,14 @@
       <option name="project" value="LOCAL" />
       <updated>1525594815475</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add experiment">
+      <created>1527784328915</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1527784328915</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1108,7 +1111,8 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <MESSAGE value="PC" />
     <MESSAGE value="add Jar" />
-    <option name="LAST_COMMIT_MESSAGE" value="add Jar" />
+    <MESSAGE value="add experiment" />
+    <option name="LAST_COMMIT_MESSAGE" value="add experiment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1118,12 +1122,6 @@
           <line>43</line>
           <properties />
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Experiment/RunExperiment.java</url>
-          <line>39</line>
-          <properties />
-          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="23" />
@@ -1344,8 +1342,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Experiment/RunExperiment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="61" column="71" lean-forward="true" selection-start-line="61" selection-start-column="71" selection-end-line="61" selection-end-column="71" />
+        <state relative-caret-position="173">
+          <caret line="49" column="9" lean-forward="true" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
