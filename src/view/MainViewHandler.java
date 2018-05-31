@@ -2,6 +2,7 @@ package view;
 
 import DataReader.*;
 import algorithm.PearsonCorrelation;
+import algorithm.RecommendationMethod;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -177,15 +178,19 @@ public class MainViewHandler extends Observable implements Observer {
             return;
         }
         Thread t = new Thread(() -> {
-            PearsonCorrelation PC = new PearsonCorrelation();
-            List<Integer> topMovies = PC.getTopMovies(dataReader.getRates(), userRates);
+            RecommendationMethod PC = new PearsonCorrelation();
+            List<Map.Entry<Integer, Double>> topMovies = PC.getTopMovies(dataReader.getRates(), userRates);
+            List<Integer> movieList = new ArrayList<>();
+            for(Map.Entry<Integer, Double> movie: topMovies){
+                movieList.add(movie.getKey());
+            }
             Parent root;
             try {
                 FXMLLoader RecommandetionsLoader = new FXMLLoader(getClass().getResource("Recommendations.fxml"));
                 root = RecommandetionsLoader.load();
                 RecommendationsHandler controller = RecommandetionsLoader.getController();
                 controller.setDataReader(dataReader);
-                controller.showMovies(topMovies);
+                controller.showMovies(movieList);
                 Platform.runLater(() -> {
                     Stage stage = new Stage();
                     stage.setTitle("My New Stage Title");
